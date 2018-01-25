@@ -188,8 +188,9 @@ detect_cert () {
 }
 
 update_userrule () {
-    result=$(ps | grep "{init.sh}" | grep -v grep | wc -l)
-    if [ "$result" != '0' ]; then
+    result1=$(ps | grep "{init.sh}" | grep -v grep | wc -l)
+    result2=$(uci -q get monlor.$appname.autorule)
+    if [ "$result1" != '0' -a "$result2" == '1' ]; then
         logsh "【$service】" "更新用户自定义规则"
         result=$(curl -skL -w %{http_code} -o /tmp/user.txt https://raw.githubusercontent.com/kysdm/ad-rules/master/user-rules-koolproxy.txt)
         [ "$result" == "200" ] && cp -rf /tmp/user.txt $monlorpath/apps/$appname/bin/data/rules/user.txt
