@@ -79,16 +79,16 @@ logsh "【Tools】" "运行monitor.sh监控脚本"
 $monlorpath/scripts/monitor.sh
 
 logsh "【Tools】" "检查迅雷配置"
-xunlei_enable=$(uci -q get monlor.tools.xunlei)
+xunlei_disable=$(uci -q get monlor.tools.xunlei)
 xunlei_enabled=$(ps | grep -E 'etm|xunlei' | grep -v grep | wc -l)
-if [ "$xunlei_enable" == '1' -a "$xunlei_enabled" != '0' ]; then
+if [ "$xunlei_disable" == '1' -a "$xunlei_enabled" != '0' ]; then
 	[ -f /usr/sbin/xunlei.sh ] && mv /usr/sbin/xunlei.sh /usr/sbin/xunlei.sh.bak
 	killall xunlei > /dev/null 2>&1
 	killall etm > /dev/null 2>&1
 	/etc/init.d/xunlei stop &
 	# rm -rf $userdisk/TDDOWNLOAD 
 	# rm -rf $userdisk/ThunderDB
-else
+elif [ "$xunlei_disable" == '0' -a "$xunlei_enabled" == '0' ]; then
 	[ ! -f /usr/sbin/xunlei.sh ] && mv /usr/sbin/xunlei.sh.bak /usr/sbin/xunlei.sh
 	/etc/init.d/xunlei start &
 fi

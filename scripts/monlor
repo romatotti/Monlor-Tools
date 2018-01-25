@@ -213,7 +213,7 @@ check_install() {
 
 	if [ `checkuci $1` == '0' ]; then
 		status=$($monlorpath/apps/$1/script/$1.sh status | head -1) > /dev/null 2>&1
-		echo -n "[$status]"
+		[ ! -z "$status" ] && echo -n "[$status]" || echo -n "[脚本异常]"
 	else 
 		echo -n "[选择以安装]"
 	fi
