@@ -62,6 +62,7 @@ stop () {
 	service_stop $BIN > /dev/null 2>&1
 	ps | grep $BIN | grep -v grep | awk '{print$1}' | xargs kill -9 > /dev/null 2>&1
 	iptables -D INPUT -p tcp --dport $port -m comment --comment "monlor-$appname" -j ACCEPT > /dev/null 2>&1
+	logsh "【$service】" "卸载插件后可删除$CONF文件夹"
 
 }
 
