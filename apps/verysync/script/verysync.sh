@@ -13,7 +13,7 @@ appname=verysync
 EXTRA_COMMANDS=" status backup recover"
 EXTRA_HELP="        status  Get $appname status"
 BIN=$monlorpath/apps/$appname/bin/$appname
-CONF=$monlorpath/apps/$appname/config
+CONF="$userdisk"/."$appname"
 LOG=/var/log/$appname.log
 port=$(uci -q get monlor.$appname.port) || port=8886
 lanip=$(uci get network.lan.ipaddr)
@@ -43,9 +43,9 @@ start () {
 		chmod +x $BIN
 		# $BIN -generate $userdisk > /tmp/messages 2>&1
 	fi
-	[ ! -d "$userdisk"/.verysync ] && mkdir "$userdisk"/.verysync
+	[ ! -d "$CONF" ] && mkdir $CONF
 	iptables -I INPUT -p tcp --dport $port -m comment --comment "monlor-$appname" -j ACCEPT 
-	service_start $BIN -home "$userdisk"/.verysync -gui-address http://0.0.0.0:$port -no-browser -no-restart -logflags=0
+	service_start $BIN -home "$CONF" -gui-address http://0.0.0.0:$port -no-browser -no-restart -logflags=0
 	if [ $? -ne 0 ]; then
         logsh "【$service】" "启动$appname服务失败！"
 		exit
@@ -88,8 +88,13 @@ status() {
 
 backup() {
 	mkdir -p $monlorbackup/$appname
+	cp -rf $CONF/*.pem $monlorbackup/$appname
+	cp -rf $CONF/csrftokens.txt $monlorbackup/$appname
+	cp -rf $CONF/setting.dat $monlorbackup/$appname
 }
 
 recover() {
-
+	cp -rf $monlorbackup/$appname/*.pem $CONF
+	cp -rf $monlorbackup/$appname/csrftokens.txt $CONF
+	cp -rf $monlorbackup/$appname/setting.dat $CONF
 }
