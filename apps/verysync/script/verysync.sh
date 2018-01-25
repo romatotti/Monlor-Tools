@@ -43,9 +43,9 @@ start () {
 		chmod +x $BIN
 		# $BIN -generate $userdisk > /tmp/messages 2>&1
 	fi
-	
+	[ ! -d "$userdisk"/.verysync ] && mkdir "$userdisk"/.verysync
 	iptables -I INPUT -p tcp --dport $port -m comment --comment "monlor-$appname" -j ACCEPT 
-	service_start $BIN -home $CONF -gui-address http://0.0.0.0:$port -no-browser -no-restart -logflags=0
+	service_start $BIN -home "$userdisk"/.verysync -gui-address http://0.0.0.0:$port -no-browser -no-restart -logflags=0
 	if [ $? -ne 0 ]; then
         logsh "【$service】" "启动$appname服务失败！"
 		exit
