@@ -88,13 +88,8 @@ status() {
 
 backup() {
 	mkdir -p $monlorbackup/$appname
-	cp -rf $CONF/*.pem $monlorbackup/$appname
-	cp -rf $CONF/csrftokens.txt $monlorbackup/$appname
-	cp -rf $CONF/setting.dat $monlorbackup/$appname
 }
 
 recover() {
-	cp -rf $monlorbackup/$appname/*.pem $CONF
-	cp -rf $monlorbackup/$appname/csrftokens.txt $CONF
-	cp -rf $monlorbackup/$appname/setting.dat $CONF
+
 }
