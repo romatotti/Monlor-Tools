@@ -146,7 +146,11 @@ manage() {
 				2) monlorurl="$monlorurl_github" ;;
 				3) monlorurl="$monlorurl_test" ;;
 			esac
-			[ ! -z "$monlorurl" ] && uci set monlor.tools.url="$monlorurl" && uci commit monlor
+			if [ ! -z "$monlorurl" ]; then
+				uci set monlor.tools.url="$monlorurl" 
+				uci commit monlor 
+				$monlorpath/scripts/crontab.sh
+			fi
 		;;
 		*)	
 			read -p "输入有误！重新输入？[1/0] " res
