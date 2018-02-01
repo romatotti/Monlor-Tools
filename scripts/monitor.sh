@@ -25,12 +25,12 @@ if [ ! -z "$samba_path" ]; then
 fi
 
 #检查uci变更
-if [ -f "/etc/config/monlor" -a -f "$monlorpath/config/monlor.uci" ]; then
+if [ -f "/etc/config/monlor" ]; then
+	[ ! -f $monlorpath/config/monlor.uci ] && touch $monlorpath/config/monlor.uci
 	md5_1=$(md5sum /etc/config/monlor | cut -d' ' -f1)
 	md5_2=$(md5sum $monlorpath/config/monlor.uci | cut -d' ' -f1)
 	if [ "$md5_1" != "$md5_2" ]; then
 		cp -rf /etc/config/monlor $monlorpath/config/monlor.uci
-		uci commit monlor
 	fi
 fi
 

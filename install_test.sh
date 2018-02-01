@@ -52,7 +52,8 @@ tar -zxvf /tmp/monlor.tar.gz -C /tmp > /dev/null 2>&1
 cp -rf /tmp/monlor $monlorpath
 chmod -R +x $monlorpath/*
 echo "初始化工具箱..."
-[ ! -f "/etc/config/monlor" ] && cp -rf $monlorpath/config/monlor.uci /etc/config/monlor
+[ ! -f "/etc/config/monlor" ] && touch /etc/config/monlor
+uci set monlor.tools=config
 uci set monlor.tools.userdisk="$userdisk"
 uci set monlor.tools.path="$monlorpath"
 uci set monlor.tools.url="$monlorurl"

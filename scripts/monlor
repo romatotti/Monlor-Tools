@@ -105,7 +105,7 @@ manage() {
 				do
 					$monlorpath/apps/$line/script/$line.sh backup
 				done
-				cp $monlorpath/config/monlor.uci $monlorbackup
+				cp -rf $monlorpath/config/monlor.uci $monlorbackup
 				sed -i '/option userdisk/d' $monlorbackup/monlor.uci
 				sed -i '/path.*monlor/d' $monlorbackup/monlor.uci
 				tar zcvf "$monlorbackup".tar.gz $monlorbackup > /dev/null 2>&1
@@ -125,7 +125,7 @@ manage() {
 						$monlorpath/apps/$line/script/$line.sh recover
 					done
 					# 恢复uci配置
-					cp $monlorbackup/monlor.uci /etc/config/monlor
+					cp -rf $monlorbackup/monlor.uci /etc/config/monlor
 					rm -rf $monlorbackup
 					echo "恢复完成, 初始化工具箱..."
 					$monlorpath/scripts/init.sh
