@@ -59,14 +59,20 @@ set_config() {
 		[ ! -z $username ] && add $username $passwd $ftppath
 	done
 
-	[ `uci get monlor.$appname.anon_enable` = "1" ] && anon_enable=YES || anon_enable=NO
+	if [ `uci get monlor.$appname.anon_enable` = "1" ]; then
+		anon_enable=YES
+		anon_root=`uci get monlor.$appname.anon_root` || anon_root=/var/ftp 
+		[ ! -d $anon_root ] && mkdir -p $anon_root
+		[ ! -d $anon_root/Share ] && mkdir -p $anon_root/Share
+		chmod 755 $anon_root
+		chmod 777 $anon_root/Share
+		del ftp && add ftp 123 $anon_root
+	else
+		anon_enable=NO
+	fi
 	port=`uci get monlor.$appname.ftp_port` || port=21
-	anon_root=`uci get monlor.$appname.anon_root` || anon_root=/var/ftp
 	cp -rf $CONF /etc/vsftpd.conf
-	mkdir -p /var/run/vsftpd
-	mkdir -m 0755 -p $anon_root
-	mkdir -m 0777 -p $anon_root/Share
-	del ftp && add ftp 123 $anon_root
+	[ ! -d /var/run/vsftpd ] && mkdir -p /var/run/vsftpd
 	echo -e "anonymous_enable=$anon_enable\nanon_root=$anon_root\nlisten_port=$port" >> /etc/vsftpd.conf
 
 }
